@@ -5,6 +5,8 @@ import doa_bookstore.entity.Author;
 public class AuthorRepository extends MyCrudRepository<Author> {
     private static AuthorRepository instance;
 
+    private AuthorRepository(){};
+
     public static synchronized AuthorRepository getInstance() {
         if (instance == null) {
             try {

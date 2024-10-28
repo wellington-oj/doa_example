@@ -5,6 +5,7 @@ import doa_bookstore.entity.Book;
 public class BookRepository extends MyCrudRepository<Book> {
 
     private static BookRepository instance;
+    private BookRepository(){};
 
     @SuppressWarnings("unchecked")
     public static synchronized BookRepository getInstance() {
