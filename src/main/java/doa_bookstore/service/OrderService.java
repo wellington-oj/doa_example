@@ -4,7 +4,8 @@ import doa_bookstore.entity.Book;
 import doa_bookstore.entity.Orders;
 import doa_bookstore.entity.Orders.OrderStatus;
 import doa_bookstore.exception.EntityAlreadyExistsException;
-import doa_bookstore.repository.MyCrudRepository;
+import doa_bookstore.repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -15,17 +16,8 @@ import java.util.Optional;
  * Provides business logic for creating, updating, and retrieving orders.
  */
 public class OrderService {
-
-    private final MyCrudRepository<Orders> orderRepository;
-
-    /**
-     * Constructs a new {@code OrderService} with the specified order repository.
-     *
-     * @param orderRepository The repository for managing Order entities.
-     */
-    public OrderService(MyCrudRepository<Orders> orderRepository) {
-        this.orderRepository = orderRepository;
-    }
+    @Autowired
+    private OrderRepository orderRepository;
 
     /**
      * Creates a new order with the given customer name and list of books.

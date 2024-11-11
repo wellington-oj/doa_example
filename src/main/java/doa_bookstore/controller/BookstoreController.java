@@ -8,6 +8,7 @@ import doa_bookstore.exception.InsufficientUnitsException;
 import doa_bookstore.service.AuthorService;
 import doa_bookstore.service.BookService;
 import doa_bookstore.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,22 +19,12 @@ import java.util.List;
  */
 public class BookstoreController {
 
-    private final BookService bookService;
-    private final AuthorService authorService;
-    private final OrderService orderService;
-
-    /**
-     * Constructs a new {@code BookstoreController} with the specified services.
-     *
-     * @param bookService   The service for managing books.
-     * @param authorService The service for managing authors.
-     * @param orderService  The service for managing orders.
-     */
-    public BookstoreController(BookService bookService, AuthorService authorService, OrderService orderService) {
-        this.bookService = bookService;
-        this.authorService = authorService;
-        this.orderService = orderService;
-    }
+    @Autowired
+    private BookService bookService;
+    @Autowired
+    private AuthorService authorService;
+    @Autowired
+    private OrderService orderService;
 
     /**
      * Retrieves all books from the bookstore.

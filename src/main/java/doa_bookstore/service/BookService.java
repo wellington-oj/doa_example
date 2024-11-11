@@ -3,6 +3,7 @@ package doa_bookstore.service;
 import doa_bookstore.entity.Book;
 import doa_bookstore.exception.EntityAlreadyExistsException;
 import doa_bookstore.repository.BookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,17 +13,8 @@ import java.util.Optional;
  * Provides business logic for retrieving, saving, and finding books.
  */
 public class BookService {
-
-    private final BookRepository bookRepository;
-
-    /**
-     * Constructs a new {@code BookService} with the specified book repository.
-     *
-     * @param bookRepository The repository for managing Book entities.
-     */
-    public BookService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
+    @Autowired
+    private BookRepository bookRepository;
 
     /**
      * Retrieves all books in the repository.

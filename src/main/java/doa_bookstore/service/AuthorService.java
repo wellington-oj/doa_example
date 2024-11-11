@@ -4,6 +4,7 @@ import doa_bookstore.entity.Author;
 import doa_bookstore.exception.EntityAlreadyExistsException;
 import doa_bookstore.exception.EntityNotFoundException;
 import doa_bookstore.repository.AuthorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -13,17 +14,8 @@ import java.util.Optional;
  * Provides business logic for retrieving, saving, and finding authors.
  */
 public class AuthorService {
-
-    private final AuthorRepository authorRepository;
-
-    /**
-     * Constructs a new {@code AuthorService} with the specified author repository.
-     *
-     * @param authorRepository The repository for managing Author entities.
-     */
-    public AuthorService(AuthorRepository authorRepository) {
-        this.authorRepository = authorRepository;
-    }
+    @Autowired
+    private AuthorRepository authorRepository;
 
     /**
      * Saves a new author to the repository.
@@ -48,8 +40,6 @@ public class AuthorService {
 
 
     public Author updateAuthor(Author author) {
-        return authorRepository.update(author);
+        return authorRepository.save(author);
     }
-
-
 }
