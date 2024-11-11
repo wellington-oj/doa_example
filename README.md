@@ -114,5 +114,3 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 ## Contact
 
 For any questions, please contact [wellington.oj@gmail.com](mailto:wellington.oj@gmail.com).
-
-[Repository Link](https://github.com/wellington-oj/doa_example/tree/springboot)
