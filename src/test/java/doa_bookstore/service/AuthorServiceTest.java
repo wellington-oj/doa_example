@@ -1,24 +1,27 @@
-package test.doa_bookstore.service;
+package doa_bookstore.service;
 
 import doa_bookstore.entity.Author;
 import doa_bookstore.exception.EntityAlreadyExistsException;
 import doa_bookstore.exception.EntityNotFoundException;
-import doa_bookstore.repository.AuthorRepository;
 import doa_bookstore.service.AuthorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@Transactional
 class AuthorServiceTest {
 
-    private AuthorRepository authorRepository;
+    @Autowired
     private AuthorService authorService;
 
     @BeforeEach
     void setUp() {
-        authorRepository = AuthorRepository.getInstance();
-        authorService = new AuthorService(authorRepository);
+        // Optional: Initialize anything needed for each test.
     }
 
     @Test
@@ -41,20 +44,23 @@ class AuthorServiceTest {
 
     @Test
     void testFindAuthorById() throws EntityAlreadyExistsException {
+        // Save an author to test retrieval
         Author author = new Author("John Doe");
         authorService.saveAuthor(author);
 
+        // Find the author by ID and check the name
         assertDoesNotThrow(() -> {
             Author foundAuthor = authorService.findAuthorByID(author.getId())
                     .orElseThrow(() -> new EntityNotFoundException(Author.class));
             assertEquals("John Doe", foundAuthor.getName());
         });
 
+        // Attempt to find a non-existent author, expecting an exception
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
             authorService.findAuthorByID(-1L).orElseThrow(() ->
-                    new EntityNotFoundException(Author.class));});
+                    new EntityNotFoundException(Author.class));
+        });
 
         assertEquals("Author not found.", exception.getMessage());
     }
-
 }

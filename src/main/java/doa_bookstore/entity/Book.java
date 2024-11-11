@@ -1,12 +1,9 @@
 package doa_bookstore.entity;
 
-import doa_bookstore.entity.interfaces.Entity;
+import jakarta.persistence.*;
 
-/**
- * Represents a book in the bookstore system.
- * Contains information about the book's ID, title, author, genre, and stock units.
- */
-public class Book implements Entity<Long> {
+@Entity
+public class Book{
 
     /**
      * Enum representing the genre of the book.
@@ -15,10 +12,19 @@ public class Book implements Entity<Long> {
         HORROR, ROMANCE, DRAMA, COMEDY, SCIFI
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
     private Author author;
+
+    @Enumerated(EnumType.STRING)
     private Genre genre;
+
     private int stockUnits;
 
     /**
@@ -46,7 +52,6 @@ public class Book implements Entity<Long> {
      *
      * @return The ID of the book.
      */
-    @Override
     public Long getId() {
         return id;
     }
@@ -56,7 +61,6 @@ public class Book implements Entity<Long> {
      *
      * @param id The ID to set for the book.
      */
-    @Override
     public void setId(Long id) {
         this.id = id;
     }

@@ -1,7 +1,6 @@
 package doa_bookstore.entity;
 
-import doa_bookstore.entity.interfaces.Entity;
-
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +8,17 @@ import java.util.List;
  * Represents an author in the bookstore system.
  * Contains information about the author's ID, name, and a list of books written by the author.
  */
-public class Author implements Entity<Long> {
+@Entity
+public class Author {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
-    private List<Book> books;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Book> books = new ArrayList<>();
 
     /**
      * Default constructor for creating an empty {@code Author}.
@@ -27,7 +32,6 @@ public class Author implements Entity<Long> {
      */
     public Author(String name) {
         this.name = name;
-        this.books = new ArrayList<>();
     }
 
     /**
@@ -35,7 +39,6 @@ public class Author implements Entity<Long> {
      *
      * @param id The ID to set for the author.
      */
-    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -45,7 +48,6 @@ public class Author implements Entity<Long> {
      *
      * @return The ID of the author.
      */
-    @Override
     public Long getId() {
         return id;
     }
@@ -87,12 +89,12 @@ public class Author implements Entity<Long> {
     }
 
     /**
-     * Add a book to the list of books
+     * Adds a book to the list of books.
      *
      * @param book The new book to associate with the author.
      */
     public void addBook(Book book) {
         this.books.add(book);
+        book.setAuthor(this); // Ensure the relationship is set on both sides
     }
-
 }

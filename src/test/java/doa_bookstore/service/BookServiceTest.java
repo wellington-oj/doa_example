@@ -1,32 +1,40 @@
-package test.doa_bookstore.service;
+package doa_bookstore.service;
 
 import doa_bookstore.entity.Author;
 import doa_bookstore.entity.Book;
 import doa_bookstore.exception.EntityAlreadyExistsException;
-import doa_bookstore.repository.BookRepository;
+import doa_bookstore.exception.EntityNotFoundException;
+import doa_bookstore.repository.AuthorRepository;
 import doa_bookstore.service.BookService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@Transactional
 class BookServiceTest {
 
-    private BookRepository bookRepository;
+    @Autowired
     private BookService bookService;
+    @Autowired
+    private AuthorRepository authorRepository;
 
     @BeforeEach
     void setUp() {
-        bookRepository = BookRepository.getInstance();
-        bookService = new BookService(bookRepository);
+        // Optional: Initialize anything needed for each test.
     }
 
     @Test
     void testSaveBook() {
         // Test saving a new book
         Author author = new Author("Jane Austen");
+        authorRepository.save(author);
         Book book = new Book("Pride and Prejudice", author, Book.Genre.ROMANCE, 10);
 
         assertDoesNotThrow(() -> {
@@ -48,6 +56,7 @@ class BookServiceTest {
     void testFindBookById() throws EntityAlreadyExistsException {
         // Test finding an existing book
         Author author = new Author("Jane Austen");
+        authorRepository.save(author);
         Book book = new Book("Pride and Prejudice", author, Book.Genre.ROMANCE, 10);
         bookService.saveBook(book);
 

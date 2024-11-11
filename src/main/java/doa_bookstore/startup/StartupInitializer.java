@@ -1,27 +1,29 @@
 package doa_bookstore.startup;
 
-import doa_bookstore.repository.AuthorRepository;
-import doa_bookstore.repository.BookRepository;
-import doa_bookstore.repository.OrderRepository;
 import doa_bookstore.service.AuthorService;
 import doa_bookstore.service.BookService;
 import doa_bookstore.service.OrderService;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StartupInitializer {
 
-    @Autowired
     private final AuthorService authorService;
-    @Autowired
     private final BookService bookService;
-    @Autowired
     private final OrderService orderService;
 
-    public StartupInitializer() {
+    @Autowired
+    public StartupInitializer(AuthorService authorService, BookService bookService, OrderService orderService) {
+        this.authorService = authorService;
+        this.bookService = bookService;
+        this.orderService = orderService;
+    }
 
-
-        this.authorService = new AuthorService();
-        this.bookService = new BookService();
-        this.orderService = new OrderService();
+    @PostConstruct
+    public void init() {
+        // Add any startup logic here, such as populating initial data
+        System.out.println("StartupInitializer: Application has started, and services are initialized.");
     }
 }

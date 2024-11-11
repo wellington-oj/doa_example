@@ -1,30 +1,30 @@
-package test.doa_bookstore.service;
+package doa_bookstore.service;
 
 import doa_bookstore.entity.Book;
 import doa_bookstore.entity.Orders;
 import doa_bookstore.exception.EntityAlreadyExistsException;
-import doa_bookstore.repository.MyCrudRepository;
-import doa_bookstore.repository.OrderRepository;
 import doa_bookstore.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@Transactional
 class OrderServiceTest {
 
-    private OrderRepository orderRepository;
+    @Autowired
     private OrderService orderService;
 
     @BeforeEach
     void setUp() {
-        orderRepository = OrderRepository.getInstance();
-        orderService = new OrderService(orderRepository);
+        // Optional setup logic for each test, if needed.
     }
 
     @Test

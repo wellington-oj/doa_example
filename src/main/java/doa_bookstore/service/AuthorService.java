@@ -5,15 +5,17 @@ import doa_bookstore.exception.EntityAlreadyExistsException;
 import doa_bookstore.exception.EntityNotFoundException;
 import doa_bookstore.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
  * Service class for managing authors in the bookstore system.
  * Provides business logic for retrieving, saving, and finding authors.
  */
+@Service
 public class AuthorService {
+
     @Autowired
     private AuthorRepository authorRepository;
 
@@ -22,9 +24,15 @@ public class AuthorService {
      *
      * @param author The author to be saved.
      * @return The saved author.
-     * @throws EntityAlreadyExistsException If an author with the same ID already exists in the repository.
+     * @throws EntityAlreadyExistsException If an author with the same name already exists.
      */
     public Author saveAuthor(Author author) throws EntityAlreadyExistsException {
+        if (author.getId() != null && authorRepository.existsById(author.getId())) {
+            throw new EntityAlreadyExistsException(Author.class);
+        }
+        if (authorRepository.findByName(author.getName()).isPresent()) {
+            throw new EntityAlreadyExistsException(Author.class);
+        }
         return authorRepository.save(author);
     }
 
@@ -38,8 +46,17 @@ public class AuthorService {
         return authorRepository.findById(authorID);
     }
 
-
-    public Author updateAuthor(Author author) {
+    /**
+     * Updates an existing author in the repository.
+     *
+     * @param author The author to be updated.
+     * @return The updated author.
+     * @throws EntityNotFoundException If the author does not exist in the repository.
+     */
+    public Author updateAuthor(Author author) throws EntityNotFoundException {
+        if (!authorRepository.existsById(author.getId())) {
+            throw new EntityNotFoundException(Author.class);
+        }
         return authorRepository.save(author);
     }
 }

@@ -2,21 +2,23 @@ package doa_bookstore.dto;
 
 import doa_bookstore.entity.Author;
 
+import java.util.Objects;
+
 /**
- *
- * THIS CLASS WILL NOT BE USED ON THE FIRST PROJECT.
- * ITS HERE BECAUSE YOU SHOULD BE AWARE HOW THIS WORKS
- * IT WILL BE ASKED FOR YOU TO WORK WITH DTOS IN THE THIRD PROJECT
- *
- *
  * Data Transfer Object (DTO) for the {@link Author} entity.
  * This class is used to transfer author data between different layers of the application.
  * It provides a simplified representation of the Author entity, focusing only on essential fields.
+ *
  */
 public class AuthorDTO {
 
     private Long id;
     private String name;
+
+    /**
+     * Default no-argument constructor for AuthorDTO.
+     */
+    public AuthorDTO() {}
 
     /**
      * Constructs an {@code AuthorDTO} from an {@link Author} entity.
@@ -27,6 +29,17 @@ public class AuthorDTO {
     public AuthorDTO(Author author) {
         this.id = author.getId();
         this.name = author.getName();
+    }
+
+    /**
+     * Constructs an {@code AuthorDTO} with specific ID and name.
+     *
+     * @param id The ID of the author.
+     * @param name The name of the author.
+     */
+    public AuthorDTO(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     /**
@@ -77,5 +90,18 @@ public class AuthorDTO {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthorDTO authorDTO = (AuthorDTO) o;
+        return Objects.equals(id, authorDTO.id) && Objects.equals(name, authorDTO.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

@@ -1,8 +1,5 @@
-package test.doa_bookstore.entity;
+package doa_bookstore.entity;
 
-import doa_bookstore.entity.Author;
-import doa_bookstore.entity.Book;
-import doa_bookstore.entity.Orders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

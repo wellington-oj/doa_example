@@ -1,43 +1,45 @@
-package test.doa_bookstore.controller;
+package doa_bookstore.controller;
 
-import doa_bookstore.controller.BookstoreController;
+import doa_bookstore.dto.AuthorDTO;
+import doa_bookstore.dto.BookDTO;
+import doa_bookstore.dto.OrdersDTO;
 import doa_bookstore.entity.Author;
 import doa_bookstore.entity.Book;
+import doa_bookstore.entity.Orders;
 import doa_bookstore.exception.EntityAlreadyExistsException;
 import doa_bookstore.exception.EntityNotFoundException;
 import doa_bookstore.exception.InsufficientUnitsException;
-import doa_bookstore.repository.AuthorRepository;
-import doa_bookstore.repository.BookRepository;
-import doa_bookstore.repository.OrderRepository;
 import doa_bookstore.service.AuthorService;
 import doa_bookstore.service.BookService;
 import doa_bookstore.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@Transactional
 class BookstoreControllerTest {
 
+    @Autowired
     private BookstoreController bookstoreController;
+    @Autowired
     private BookService bookService;
+    @Autowired
     private AuthorService authorService;
+    @Autowired
     private OrderService orderService;
 
     @BeforeEach
     void setUp() {
-        BookRepository bookRepository = BookRepository.getInstance();
-        AuthorRepository authorRepository = AuthorRepository.getInstance();
-        OrderRepository orderRepository = OrderRepository.getInstance();
-
-        bookService = new BookService(bookRepository);
-        authorService = new AuthorService(authorRepository);
-        orderService = new OrderService(orderRepository);
-
-        bookstoreController = new BookstoreController(bookService, authorService, orderService);
+        // Optional setup for any common initialization needed before tests
     }
 
     @Test
@@ -46,29 +48,29 @@ class BookstoreControllerTest {
         authorService.saveAuthor(author);
         Book book = new Book("Pride and Prejudice", author, Book.Genre.ROMANCE, 10);
 
-        Book savedBook = bookstoreController.saveBook(book);
+        BookDTO savedBookDTO = bookstoreController.saveBook(book).getBody();
+        assertNotNull(savedBookDTO);
+        assertNotNull(savedBookDTO.getId());
+        assertEquals("Pride and Prejudice", savedBookDTO.getTitle());
 
-        assertNotNull(savedBook.getId());
-        assertEquals("Pride and Prejudice", savedBook.getTitle());
-
-        author.addBook(savedBook);
+        author.addBook(bookService.findBookById(savedBookDTO.getId()).orElseThrow());
         authorService.updateAuthor(author);
 
         Author repoAuthor = authorService.findAuthorByID(author.getId())
                 .orElseThrow(() -> new EntityNotFoundException(Author.class));
 
-        assertTrue(repoAuthor.getBooks().contains(savedBook));
+        assertTrue(repoAuthor.getBooks().stream()
+                .anyMatch(b -> b.getId().equals(savedBookDTO.getId())));
     }
-
 
     @Test
     void testFindAuthorById() throws EntityAlreadyExistsException, EntityNotFoundException {
         Author author = new Author("Jane Austen");
         authorService.saveAuthor(author);
 
-        Author foundAuthor = bookstoreController.findAuthorById(author.getId());
-        assertNotNull(foundAuthor);
-        assertEquals("Jane Austen", foundAuthor.getName());
+        AuthorDTO foundAuthorDTO = bookstoreController.findAuthorById(author.getId()).getBody();
+        assertNotNull(foundAuthorDTO);
+        assertEquals("Jane Austen", foundAuthorDTO.getName());
     }
 
     @Test
@@ -83,11 +85,13 @@ class BookstoreControllerTest {
 
         author.addBook(book1);
         author.addBook(book2);
+        authorService.updateAuthor(author);
 
-        Author updatedAuthor = authorService.updateAuthor(author);
-
-        List<Book> books = bookstoreController.booksByAuthor(updatedAuthor);
+        List<BookDTO> books = bookstoreController.booksByAuthor(author.getId()).getBody();
+        assertNotNull(books);
         assertEquals(2, books.size());
+        assertTrue(books.stream().anyMatch(b -> b.getTitle().equals("Pride and Prejudice")));
+        assertTrue(books.stream().anyMatch(b -> b.getTitle().equals("Emma")));
     }
 
     @Test
@@ -95,29 +99,29 @@ class BookstoreControllerTest {
         Author author = new Author("Jane Austen");
         authorService.saveAuthor(author);
 
-
         Book book = new Book("Pride and Prejudice", author, Book.Genre.ROMANCE, 10);
         bookService.saveBook(book);
         author.addBook(book);
-
         authorService.updateAuthor(author);
 
         HashMap<Book, Integer> orders = new HashMap<>();
         orders.put(book, 2);
 
-        boolean isOrderSuccessful = bookstoreController.makeOrder("Alice", orders);
-        assertTrue(isOrderSuccessful);
+        OrdersDTO createdOrderDTO = bookstoreController.makeOrder("Alice", orders).getBody();
+        assertNotNull(createdOrderDTO);
+        assertEquals("Alice", createdOrderDTO.getCustomerName());
+        assertEquals(Orders.OrderStatus.PENDING, createdOrderDTO.getStatus());
+        assertTrue(createdOrderDTO.getBooks().containsKey(new BookDTO(book)));
     }
 
     @Test
-    void testMakeOrderInsufficientUnits() throws EntityAlreadyExistsException {
+    void testMakeOrderInsufficientUnits() throws EntityAlreadyExistsException, EntityNotFoundException {
         Author author = new Author("Jane Austen");
         authorService.saveAuthor(author);
 
         Book book = new Book("Pride and Prejudice", author, Book.Genre.ROMANCE, 1);
         bookService.saveBook(book);
         author.addBook(book);
-
         authorService.updateAuthor(author);
 
         HashMap<Book, Integer> orders = new HashMap<>();
