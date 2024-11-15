@@ -2,6 +2,7 @@ package doa_bookstore.dto;
 
 import doa_bookstore.entity.Author;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -10,15 +11,10 @@ import java.util.Objects;
  * It provides a simplified representation of the Author entity, focusing only on essential fields.
  *
  */
-public class AuthorDTO {
-
+public class AuthorDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Long id;
     private String name;
-
-    /**
-     * Default no-argument constructor for AuthorDTO.
-     */
-    public AuthorDTO() {}
 
     /**
      * Constructs an {@code AuthorDTO} from an {@link Author} entity.
@@ -30,6 +26,32 @@ public class AuthorDTO {
         this.id = author.getId();
         this.name = author.getName();
     }
+    @Override
+    public String toString() {
+        return "AuthorDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthorDTO authorDTO = (AuthorDTO) o;
+        return Objects.equals(id, authorDTO.id) && Objects.equals(name, authorDTO.name);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
+
+
+    /**
+     * Default no-argument constructor for AuthorDTO.
+     */
+    public AuthorDTO() {}
+
+
 
     /**
      * Constructs an {@code AuthorDTO} with specific ID and name.
@@ -84,24 +106,5 @@ public class AuthorDTO {
      *
      * @return A string representation of the {@code AuthorDTO}.
      */
-    @Override
-    public String toString() {
-        return "AuthorDTO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AuthorDTO authorDTO = (AuthorDTO) o;
-        return Objects.equals(id, authorDTO.id) && Objects.equals(name, authorDTO.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
 }

@@ -25,5 +25,6 @@ public class StartupInitializer {
     public void init() {
         // Add any startup logic here, such as populating initial data
         System.out.println("StartupInitializer: Application has started, and services are initialized.");
+
     }
 }

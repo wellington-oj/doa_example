@@ -15,10 +15,8 @@ import java.util.Optional;
  */
 @Service
 public class AuthorService {
-
     @Autowired
     private AuthorRepository authorRepository;
-
     /**
      * Saves a new author to the repository.
      *
