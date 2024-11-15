@@ -18,10 +18,10 @@ src
 │   │   ├── AuthorDTO.java                    # Data Transfer Object for Author
 │   │   ├── BookDTO.java                      # Data Transfer Object for Book
 │   │   └── OrdersDTO.java                    # Data Transfer Object for Orders
-│   ├── entity/
-│   │   ├── Author.java                   # Author entity class
-│   │   ├── Book.java                     # Book entity class
-│   │   └── Orders.java                   # Orders entity class
+│   ├── entity/   
+│   │   ├── Author.java                       # Author entity class
+│   │   ├── Book.java                         # Book entity class
+│   │   └── Orders.java                       # Orders entity class
 │   ├── exception/
 │   │   ├── EntityAlreadyExistsException.java # Exception for duplicate entities
 │   │   ├── EntityNotFoundException.java      # Exception for entities not found
