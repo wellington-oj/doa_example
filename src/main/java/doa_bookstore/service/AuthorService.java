@@ -1,12 +1,14 @@
 package doa_bookstore.service;
 
 import doa_bookstore.entity.Author;
+import doa_bookstore.entity.Book;
 import doa_bookstore.exception.EntityAlreadyExistsException;
 import doa_bookstore.exception.EntityNotFoundException;
 import doa_bookstore.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -56,5 +58,14 @@ public class AuthorService {
             throw new EntityNotFoundException(Author.class);
         }
         return authorRepository.save(author);
+    }
+
+    /**
+     * Retrieves all authors in the repository.
+     *
+     * @return A list of all authors.
+     */
+    public List<Author> getAllAuthors() {
+        return authorRepository.findAll();
     }
 }

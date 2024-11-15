@@ -50,6 +50,19 @@ public class BookstoreController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(books);
     }
+    /**
+     * Retrieves all authors from the bookstore as a list of AuthorDTOs.
+     *
+     * @return A ResponseEntity with a list of all authors in DTO format.
+     */
+    @GetMapping("/authors")
+    public ResponseEntity<List<AuthorDTO>> getAllAuthors() {
+        List<AuthorDTO> authors = authorService.getAllAuthors().stream()
+                .map(AuthorDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(authors);
+    }
+
 
     /**
      * Saves a new book in the bookstore and returns it as a BookDTO.
