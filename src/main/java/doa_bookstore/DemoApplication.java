@@ -20,17 +20,14 @@ public class DemoApplication {
     @Bean
     CommandLineRunner initDatabase(AuthorRepository authorRepository, BookRepository bookRepository) {
         return args -> {
-            // Add some initial authors to the in-memory database
             Author machado = new Author("Machado de Assis");
             Author markTwain = new Author("Mark Twain");
             authorRepository.save(machado);
             authorRepository.save(markTwain);
 
-            // Add a book associated with Jane Austen
             Book book = new Book("Test", machado, Genre.DRAMA, 100);
             bookRepository.save(book);
-
-            System.out.println("Database initialized with sample data.");
         };
     }
 }
+

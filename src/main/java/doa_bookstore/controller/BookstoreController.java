@@ -26,17 +26,12 @@ import java.util.stream.Collectors;
  * Provides methods to handle book, author, and order-related functionality.
  */
 public class BookstoreController {
-
-    private final BookService bookService;
-    private final AuthorService authorService;
-    private final OrderService orderService;
-
     @Autowired
-    public BookstoreController(BookService bookService, AuthorService authorService, OrderService orderService) {
-        this.bookService = bookService;
-        this.authorService = authorService;
-        this.orderService = orderService;
-    }
+    private BookService bookService;
+    @Autowired
+    private AuthorService authorService;
+    @Autowired
+    private OrderService orderService;
 
     /**
      * Retrieves all books from the bookstore as a list of BookDTOs.
@@ -104,7 +99,8 @@ public class BookstoreController {
      * @throws EntityAlreadyExistsException If the author already exists.
      */
     @PostMapping("/authors")
-    public ResponseEntity<AuthorDTO> saveAuthor(@RequestBody Author author) throws EntityAlreadyExistsException {
+    public ResponseEntity<AuthorDTO> saveAuthor(@RequestBody Author author)
+            throws EntityAlreadyExistsException {
         Author savedAuthor = authorService.saveAuthor(author);
         return ResponseEntity.ok(new AuthorDTO(savedAuthor));
     }

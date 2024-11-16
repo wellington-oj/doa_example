@@ -19,14 +19,8 @@ class AuthorServiceTest {
     @Autowired
     private AuthorService authorService;
 
-    @BeforeEach
-    void setUp() {
-        // Optional: Initialize anything needed for each test.
-    }
-
     @Test
     void testSaveAuthor() {
-        // Test saving a new author
         Author author = new Author("John Doe");
         assertDoesNotThrow(() -> {
             Author savedAuthor = authorService.saveAuthor(author);
@@ -34,13 +28,13 @@ class AuthorServiceTest {
             assertEquals("John Doe", savedAuthor.getName());
         });
 
-        // Test attempting to save the same author again (should throw an exception)
         EntityAlreadyExistsException exception = assertThrows(EntityAlreadyExistsException.class, () -> {
             authorService.saveAuthor(author);
         });
 
         assertEquals("Author already exists.", exception.getMessage());
     }
+
 
     @Test
     void testFindAuthorById() throws EntityAlreadyExistsException {
