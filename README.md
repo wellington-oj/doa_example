@@ -36,7 +36,7 @@ src
 │   │   └── OrderService.java                 # Service layer for Order operations  
 │   ├── startup/
 │   │   ├── StartupInitializer.java           # Initializes application with sample data
-│   └── Application.java                      # Main application entry point
+│   └── DemoApplication.java                  # Demo application entry point
 └── test.doa_bookstore/
     ├── controller/
     │   └── BookstoreControllerTest.java      # Unit tests for BookstoreController
@@ -80,7 +80,7 @@ src
     - Import the project as an existing project.
 
 3. **Running the Application**
-    - Use the main entry point `Application.java` to start the Spring Boot application.
+    - Use the main entry point `DemoApplication.java` to start the Spring Boot application. It serves as a sanity test for the application
 
 4. **Running Tests**
     - Tests are located under `test.doa_bookstore`.
