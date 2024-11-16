@@ -11,6 +11,8 @@ import doa_bookstore.exception.InsufficientUnitsException;
 import doa_bookstore.service.AuthorService;
 import doa_bookstore.service.BookService;
 import doa_bookstore.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/bookstore")
+@Tag(name = "Bookstore API", description = "API for managing books, authors, and orders in the bookstore.")
+
 /**
  * Controller class for managing bookstore operations.
  * Provides methods to handle book, author, and order-related functionality.
@@ -38,6 +42,7 @@ public class BookstoreController {
      *
      * @return A ResponseEntity with a list of all books in DTO format.
      */
+    @Operation(summary = "Get all books", description = "Retrieve a list of all books in the bookstore.")
     @GetMapping("/books")
     public ResponseEntity<List<BookDTO>> getAllBooks() {
         List<BookDTO> books = bookService.getAllBooks().stream()
@@ -50,6 +55,7 @@ public class BookstoreController {
      *
      * @return A ResponseEntity with a list of all authors in DTO format.
      */
+    @Operation(summary = "Get all authors", description = "Retrieve a list of all authors in the bookstore.")
     @GetMapping("/authors")
     public ResponseEntity<List<AuthorDTO>> getAllAuthors() {
         List<AuthorDTO> authors = authorService.getAllAuthors().stream()
@@ -67,6 +73,7 @@ public class BookstoreController {
      * @throws EntityAlreadyExistsException If the book already exists.
      * @throws EntityNotFoundException If the author is not found.
      */
+    @Operation(summary = "Save a new book", description = "Add a new book to the bookstore.")
     @PostMapping("/books")
     public ResponseEntity<BookDTO> saveBook(@RequestBody Book book) throws EntityAlreadyExistsException, EntityNotFoundException {
         if (book.getAuthor() == null || book.getAuthor().getId() == null ||
@@ -84,6 +91,7 @@ public class BookstoreController {
      * @return A ResponseEntity with the found author in DTO format.
      * @throws EntityNotFoundException If no author with the specified ID is found.
      */
+    @Operation(summary = "Get author by ID", description = "Retrieve an author by their ID.")
     @GetMapping("/authors/{id}")
     public ResponseEntity<AuthorDTO> findAuthorById(@PathVariable Long id) throws EntityNotFoundException {
         Author author = authorService.findAuthorByID(id)
@@ -98,6 +106,7 @@ public class BookstoreController {
      * @return A ResponseEntity with the saved author in DTO format.
      * @throws EntityAlreadyExistsException If the author already exists.
      */
+    @Operation(summary = "Save a new author", description = "Add a new author to the bookstore.")
     @PostMapping("/authors")
     public ResponseEntity<AuthorDTO> saveAuthor(@RequestBody Author author)
             throws EntityAlreadyExistsException {
@@ -112,6 +121,7 @@ public class BookstoreController {
      * @return A ResponseEntity with a list of books by the author in DTO format.
      * @throws EntityNotFoundException If the author does not exist.
      */
+    @Operation(summary = "Get books by author", description = "Retrieve all books written by a specific author.")
     @GetMapping("/authors/{authorId}/books")
     public ResponseEntity<List<BookDTO>> booksByAuthor(@PathVariable Long authorId) throws EntityNotFoundException {
         List<BookDTO> books = authorService.findAuthorByID(authorId)
@@ -134,6 +144,8 @@ public class BookstoreController {
      * @throws EntityNotFoundException If a book is not found.
      * @throws EntityAlreadyExistsException If the order already exists.
      */
+    @Operation(summary = "Create an order", description = "Place a new order for books.")
+
     @PostMapping("/orders")
     public ResponseEntity<OrdersDTO> makeOrder(
             @RequestParam String customerName,
