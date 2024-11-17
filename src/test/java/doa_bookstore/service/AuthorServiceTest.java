@@ -4,17 +4,32 @@ import doa_bookstore.entity.Author;
 import doa_bookstore.exception.EntityAlreadyExistsException;
 import doa_bookstore.exception.EntityNotFoundException;
 import doa_bookstore.service.AuthorService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 class AuthorServiceTest {
+
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15")
+            .withDatabaseName("testdb")
+            .withUsername("postgres")
+            .withPassword("password");
+
+    @BeforeAll
+    static void startContainer() {
+        postgres.start();
+        System.setProperty("spring.datasource.url", postgres.getJdbcUrl());
+        System.setProperty("spring.datasource.username", postgres.getUsername());
+        System.setProperty("spring.datasource.password", postgres.getPassword());
+    }
 
     @Autowired
     private AuthorService authorService;

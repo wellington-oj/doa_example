@@ -1,7 +1,9 @@
 package doa_bookstore.entity;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +20,19 @@ class OrderTest {
     private Book book;
     private HashMap<Book, Integer> books;
 
+
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15")
+            .withDatabaseName("testdb")
+            .withUsername("postgres")
+            .withPassword("password");
+
+    @BeforeAll
+    static void startContainer() {
+        postgres.start();
+        System.setProperty("spring.datasource.url", postgres.getJdbcUrl());
+        System.setProperty("spring.datasource.username", postgres.getUsername());
+        System.setProperty("spring.datasource.password", postgres.getPassword());
+    }
     @BeforeEach
     void setUp() {
         author = new Author("George Orwell");

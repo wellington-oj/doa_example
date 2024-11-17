@@ -12,12 +12,14 @@ import doa_bookstore.exception.InsufficientUnitsException;
 import doa_bookstore.service.AuthorService;
 import doa_bookstore.service.BookService;
 import doa_bookstore.service.OrderService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,9 +39,17 @@ class BookstoreControllerTest {
     @Autowired
     private OrderService orderService;
 
-    @BeforeEach
-    void setUp() {
-        // Optional setup for any common initialization needed before tests
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15")
+            .withDatabaseName("testdb")
+            .withUsername("postgres")
+            .withPassword("password");
+
+    @BeforeAll
+    static void startContainer() {
+        postgres.start();
+        System.setProperty("spring.datasource.url", postgres.getJdbcUrl());
+        System.setProperty("spring.datasource.username", postgres.getUsername());
+        System.setProperty("spring.datasource.password", postgres.getPassword());
     }
 
     @Test
