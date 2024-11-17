@@ -1,6 +1,8 @@
 package doa_bookstore.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +17,17 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Embedded
+    private Address address;
+
     private String name;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "birthDate", columnDefinition = "DATE")
+    private LocalDate birthDate;
+
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<Book> books = new ArrayList<>();
 
     /**
@@ -96,5 +106,21 @@ public class Author {
     public void addBook(Book book) {
         this.books.add(book);
         book.setAuthor(this); // Ensure the relationship is set on both sides
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 }

@@ -2,8 +2,13 @@ package doa_bookstore.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 public class Book{
+
+    @ManyToMany(mappedBy = "books")
+    private Set<Library> libraries;
 
     /**
      * Enum representing the genre of the book.
@@ -17,6 +22,8 @@ public class Book{
     private Long id;
 
     private String title;
+
+
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
