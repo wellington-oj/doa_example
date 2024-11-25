@@ -1,8 +1,11 @@
 package doa_bookstore.entity;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -18,13 +21,14 @@ class OrderTest {
     private Book book;
     private HashMap<Book, Integer> books;
 
+
     @BeforeEach
     void setUp() {
         author = new Author("George Orwell");
         book = new Book("1984", author, Book.Genre.SCIFI, 20);
         books = new HashMap<>();
         books.put(book, 3);
-        order = new Orders("Alice Johnson", books, new Date(), Orders.OrderStatus.PENDING);
+        order = new Orders("Alice Johnson", books, LocalDateTime.now(), Orders.OrderStatus.PENDING);
     }
 
     @Test
@@ -58,17 +62,9 @@ class OrderTest {
     }
 
     @Test
-    void testGetOrderDate() {
-        Date now = new Date();
-        order.setOrderDate(now);
-        assertEquals(now, order.getOrderDate());
-    }
-
-    @Test
     void testSetOrderDate() {
-        Date newDate = new Date();
-        order.setOrderDate(newDate);
-        assertEquals(newDate, order.getOrderDate());
+        order.setOrderDate(LocalDateTime.now());
+        assertEquals(LocalDateTime.now(), order.getOrderDate());
     }
 
     @Test

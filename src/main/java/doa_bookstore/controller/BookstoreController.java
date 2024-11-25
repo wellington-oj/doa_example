@@ -19,17 +19,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/bookstore")
 @Tag(name = "Bookstore API", description = "API for managing books, authors, and orders in the bookstore.")
-
-/**
- * Controller class for managing bookstore operations.
- * Provides methods to handle book, author, and order-related functionality.
- */
 public class BookstoreController {
+
     @Autowired
     private BookService bookService;
     @Autowired
@@ -37,11 +34,6 @@ public class BookstoreController {
     @Autowired
     private OrderService orderService;
 
-    /**
-     * Retrieves all books from the bookstore as a list of BookDTOs.
-     *
-     * @return A ResponseEntity with a list of all books in DTO format.
-     */
     @Operation(summary = "Get all books", description = "Retrieve a list of all books in the bookstore.")
     @GetMapping("/books")
     public ResponseEntity<List<BookDTO>> getAllBooks() {
@@ -50,11 +42,7 @@ public class BookstoreController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(books);
     }
-    /**
-     * Retrieves all authors from the bookstore as a list of AuthorDTOs.
-     *
-     * @return A ResponseEntity with a list of all authors in DTO format.
-     */
+
     @Operation(summary = "Get all authors", description = "Retrieve a list of all authors in the bookstore.")
     @GetMapping("/authors")
     public ResponseEntity<List<AuthorDTO>> getAllAuthors() {
@@ -64,66 +52,43 @@ public class BookstoreController {
         return ResponseEntity.ok(authors);
     }
 
-
-    /**
-     * Saves a new book in the bookstore and returns it as a BookDTO.
-     *
-     * @param book The book to be saved.
-     * @return A ResponseEntity with the saved book in DTO format.
-     * @throws EntityAlreadyExistsException If the book already exists.
-     * @throws EntityNotFoundException If the author is not found.
-     */
     @Operation(summary = "Save a new book", description = "Add a new book to the bookstore.")
     @PostMapping("/books")
-    public ResponseEntity<BookDTO> saveBook(@RequestBody Book book) throws EntityAlreadyExistsException, EntityNotFoundException {
-        if (book.getAuthor() == null || book.getAuthor().getId() == null ||
-                !authorService.findAuthorByID(book.getAuthor().getId()).isPresent()) {
-            throw new EntityNotFoundException(Author.class);
-        }
+    public ResponseEntity<BookDTO> saveBook(@RequestBody BookDTO bookDTO)
+            throws EntityAlreadyExistsException, EntityNotFoundException {
+        Book book = new Book();
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(authorService.findAuthorByID(bookDTO.getAuthorId())
+                .orElseThrow(() -> new EntityNotFoundException(Author.class)));
+
         Book savedBook = bookService.saveBook(book);
         return ResponseEntity.ok(new BookDTO(savedBook));
     }
 
-    /**
-     * Finds an author by their ID and returns it as an AuthorDTO.
-     *
-     * @param id The ID of the author.
-     * @return A ResponseEntity with the found author in DTO format.
-     * @throws EntityNotFoundException If no author with the specified ID is found.
-     */
     @Operation(summary = "Get author by ID", description = "Retrieve an author by their ID.")
     @GetMapping("/authors/{id}")
-    public ResponseEntity<AuthorDTO> findAuthorById(@PathVariable Long id) throws EntityNotFoundException {
+    public ResponseEntity<AuthorDTO> findAuthorById(@PathVariable Long id)
+            throws EntityNotFoundException {
         Author author = authorService.findAuthorByID(id)
                 .orElseThrow(() -> new EntityNotFoundException(Author.class));
         return ResponseEntity.ok(new AuthorDTO(author));
     }
 
-    /**
-     * Saves a new author in the bookstore and returns it as an AuthorDTO.
-     *
-     * @param author The author to be saved.
-     * @return A ResponseEntity with the saved author in DTO format.
-     * @throws EntityAlreadyExistsException If the author already exists.
-     */
     @Operation(summary = "Save a new author", description = "Add a new author to the bookstore.")
     @PostMapping("/authors")
-    public ResponseEntity<AuthorDTO> saveAuthor(@RequestBody Author author)
+    public ResponseEntity<AuthorDTO> saveAuthor(@RequestBody AuthorDTO authorDTO)
             throws EntityAlreadyExistsException {
+        Author author = new Author();
+        author.setName(authorDTO.getName());
+
         Author savedAuthor = authorService.saveAuthor(author);
         return ResponseEntity.ok(new AuthorDTO(savedAuthor));
     }
 
-    /**
-     * Retrieves a list of books by the specified author as a list of BookDTOs.
-     *
-     * @param authorId The ID of the author.
-     * @return A ResponseEntity with a list of books by the author in DTO format.
-     * @throws EntityNotFoundException If the author does not exist.
-     */
     @Operation(summary = "Get books by author", description = "Retrieve all books written by a specific author.")
     @GetMapping("/authors/{authorId}/books")
-    public ResponseEntity<List<BookDTO>> booksByAuthor(@PathVariable Long authorId) throws EntityNotFoundException {
+    public ResponseEntity<List<BookDTO>> booksByAuthor(@PathVariable Long authorId)
+            throws EntityNotFoundException {
         List<BookDTO> books = authorService.findAuthorByID(authorId)
                 .orElseThrow(() -> new EntityNotFoundException(Author.class))
                 .getBooks()
@@ -133,41 +98,27 @@ public class BookstoreController {
         return ResponseEntity.ok(books);
     }
 
-    /**
-     * Creates an order for the specified customer with a list of books and quantities
-     * and returns the created order as an OrdersDTO.
-     *
-     * @param customerName The name of the customer.
-     * @param orders       A map of books and quantities.
-     * @return A ResponseEntity with the created order in DTO format.
-     * @throws InsufficientUnitsException If insufficient units of any book are available.
-     * @throws EntityNotFoundException If a book is not found.
-     * @throws EntityAlreadyExistsException If the order already exists.
-     */
     @Operation(summary = "Create an order", description = "Place a new order for books.")
-
     @PostMapping("/orders")
-    public ResponseEntity<OrdersDTO> makeOrder(
-            @RequestParam String customerName,
-            @RequestBody HashMap<Book, Integer> orders)
+    public ResponseEntity<OrdersDTO> makeOrder(@RequestBody OrdersDTO orderDTO)
             throws InsufficientUnitsException, EntityNotFoundException, EntityAlreadyExistsException {
+        String customerName = orderDTO.getCustomerName();
+        Map<BookDTO, Integer> bookOrders = orderDTO.getBooks();
 
-        // Check availability of all books in the order
-        for (Book bookFromList : orders.keySet()) {
-            Book bookFromRepo = bookService.findBookById(bookFromList.getId())
+        HashMap<Book, Integer> orders = new HashMap<>();
+
+        for (BookDTO bookDTO : bookOrders.keySet()) {
+            Book book = bookService.findBookById(bookDTO.getId())
                     .orElseThrow(() -> new EntityNotFoundException(Book.class));
-
-            if (!bookFromRepo.getTitle().equals(bookFromList.getTitle())) {
+            if(!bookDTO.getTitle().equals(book.getTitle()))
                 throw new EntityNotFoundException(Book.class);
-            }
-
-            int requestedQuantity = orders.get(bookFromList);
-            if (bookFromRepo.getStockUnits() < requestedQuantity) {
+            int requestedQuantity = bookOrders.get(bookDTO);
+            if (book.getStockUnits() < requestedQuantity) {
                 throw new InsufficientUnitsException();
             }
+            orders.put(book, requestedQuantity);
         }
 
-        // Create the order
         OrdersDTO createdOrderDTO = new OrdersDTO(orderService.createOrder(customerName, orders));
         return ResponseEntity.ok(createdOrderDTO);
     }

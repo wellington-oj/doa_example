@@ -14,7 +14,7 @@ public class BookDTO {
 
     private Long id;
     private String title;
-    private String authorName;
+    private Long authorId;
 
     /**
      * Default no-argument constructor for BookDTO.
@@ -30,20 +30,20 @@ public class BookDTO {
     public BookDTO(Book book) {
         this.id = book.getId();
         this.title = book.getTitle();
-        this.authorName = book.getAuthor().getName();
+        this.authorId = book.getAuthor().getId();
     }
 
     /**
-     * Constructs a {@code BookDTO} with specific ID, title, and author name.
+     * Constructs a {@code BookDTO} with specific ID, title, and author id.
      *
      * @param id         The ID of the book.
      * @param title      The title of the book.
-     * @param authorName The name of the author of the book.
+     * @param authorName The id of the author of the book.
      */
-    public BookDTO(Long id, String title, String authorName) {
+    public BookDTO(Long id, String title, Long authorName) {
         this.id = id;
         this.title = title;
-        this.authorName = authorName;
+        this.authorId = authorName;
     }
 
     /**
@@ -83,21 +83,21 @@ public class BookDTO {
     }
 
     /**
-     * Gets the name of the author of the book.
+     * Gets the id of the author of the book.
      *
-     * @return The name of the author.
+     * @return The id of the author.
      */
-    public String getAuthorName() {
-        return authorName;
+    public Long getAuthorId() {
+        return authorId;
     }
 
     /**
-     * Sets the name of the author of the book.
+     * Sets the id of the author of the book.
      *
-     * @param authorName The new name to set for the author.
+     * @param authorId The new name to set for the author.
      */
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
     }
 
     /**
@@ -111,7 +111,7 @@ public class BookDTO {
         return "BookDTO{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", authorName='" + authorName + '\'' +
+                ", authorId='" + authorId + '\'' +
                 '}';
     }
 
@@ -120,11 +120,11 @@ public class BookDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BookDTO bookDTO = (BookDTO) o;
-        return Objects.equals(id, bookDTO.id) && Objects.equals(title, bookDTO.title) && Objects.equals(authorName, bookDTO.authorName);
+        return Objects.equals(id, bookDTO.id) && Objects.equals(title, bookDTO.title) && Objects.equals(authorId, bookDTO.authorId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, authorName);
+        return Objects.hash(id, title, authorId);
     }
 }

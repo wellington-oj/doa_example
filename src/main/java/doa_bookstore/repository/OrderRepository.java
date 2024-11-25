@@ -3,6 +3,8 @@ package doa_bookstore.repository;
 import doa_bookstore.entity.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -16,5 +18,5 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
      * @param orderDate    The date the order was placed.
      * @return An Optional containing the found order, or an empty Optional if no order is found.
      */
-    Optional<Orders> findByCustomerNameAndOrderDate(String customerName, Date orderDate);
+    Optional<Orders> findByCustomerNameAndOrderDate(String customerName, LocalDateTime orderDate);
 }
