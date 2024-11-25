@@ -76,8 +76,9 @@ class OrderTest {
 
     @Test
     void testSetOrderDate() {
-        order.setOrderDate(LocalDateTime.now());
-        assertEquals(LocalDateTime.now(), order.getOrderDate());
+        LocalDateTime now = LocalDateTime.now();
+        order.setOrderDate(now);
+        assertEquals(now, order.getOrderDate());
     }
 
     @Test

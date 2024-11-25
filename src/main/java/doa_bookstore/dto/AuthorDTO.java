@@ -1,6 +1,7 @@
 package doa_bookstore.dto;
 
 import doa_bookstore.entity.Author;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -11,6 +12,7 @@ import java.util.Objects;
  * It provides a simplified representation of the Author entity, focusing only on essential fields.
  *
  */
+@Schema(description = "DTO representing an Author")
 public class AuthorDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long id;
