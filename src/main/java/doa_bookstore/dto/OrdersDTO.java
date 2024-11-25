@@ -3,6 +3,7 @@ package doa_bookstore.dto;
 import doa_bookstore.entity.Book;
 import doa_bookstore.entity.Orders;
 import doa_bookstore.entity.Orders.OrderStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.util.Objects;
  * This class is used to transfer order data between different layers of the application.
  * It provides a simplified representation of the Orders entity, focusing on essential fields.
  */
+@Schema(description = "DTO representing a Orders")
 public class OrdersDTO {
 
     private Long id;

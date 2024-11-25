@@ -60,6 +60,14 @@ public class BookstoreController {
         book.setTitle(bookDTO.getTitle());
         book.setAuthor(authorService.findAuthorByID(bookDTO.getAuthorId())
                 .orElseThrow(() -> new EntityNotFoundException(Author.class)));
+        for(Book.Genre genre: Book.Genre.values()) {
+            if(genre.toString().equals(bookDTO.getGenre()))
+                book.setGenre(genre);
+        }
+        if(book.getGenre() == null){
+            throw new IllegalArgumentException();
+        }
+        book.setStockUnits(bookDTO.getStockQuantity());
 
         Book savedBook = bookService.saveBook(book);
         return ResponseEntity.ok(new BookDTO(savedBook));
@@ -98,12 +106,12 @@ public class BookstoreController {
         return ResponseEntity.ok(books);
     }
 
-    @Operation(summary = "Create an order", description = "Place a new order for books.")
+    @Operation(summary = "Create an orders", description = "Place a new orders for books.")
     @PostMapping("/orders")
-    public ResponseEntity<OrdersDTO> makeOrder(@RequestBody OrdersDTO orderDTO)
+    public ResponseEntity<OrdersDTO> makeOrder(@RequestBody OrdersDTO ordersDTO)
             throws InsufficientUnitsException, EntityNotFoundException, EntityAlreadyExistsException {
-        String customerName = orderDTO.getCustomerName();
-        Map<BookDTO, Integer> bookOrders = orderDTO.getBooks();
+        String customerName = ordersDTO.getCustomerName();
+        Map<BookDTO, Integer> bookOrders = ordersDTO.getBooks();
 
         HashMap<Book, Integer> orders = new HashMap<>();
 
