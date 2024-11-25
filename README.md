@@ -96,7 +96,7 @@ src
 
 2. **Build and Run with Docker**
    ```bash
-   docker-compose up --build
+   docker-compose up
    ```
 
 3. **Access the Application**
