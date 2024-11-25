@@ -100,7 +100,7 @@ src
    ```
 
 3. **Access the Application**
-   - The application will be available at `http://localhost:8080`.
+   - You can access the OpenAPI definition using http://localhost:8080/swagger-ui/index.html#/
 
 4. **Running Tests**
    - Tests are located under `test/java/com/doa_bookstore`.
