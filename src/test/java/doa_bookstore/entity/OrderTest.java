@@ -3,6 +3,7 @@ package doa_bookstore.entity;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,7 +21,6 @@ class OrderTest {
     private Author author;
     private Book book;
     private HashMap<Book, Integer> books;
-
 
     @BeforeEach
     void setUp() {
@@ -63,8 +63,9 @@ class OrderTest {
 
     @Test
     void testSetOrderDate() {
-        order.setOrderDate(LocalDateTime.now());
-        assertEquals(LocalDateTime.now(), order.getOrderDate());
+        LocalDateTime now = LocalDateTime.now();
+        order.setOrderDate(now);
+        assertEquals(now, order.getOrderDate());
     }
 
     @Test

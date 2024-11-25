@@ -1,6 +1,7 @@
 package doa_bookstore.dto;
 
 import doa_bookstore.entity.Book;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Objects;
 
@@ -10,11 +11,14 @@ import java.util.Objects;
  * It provides a simplified representation of the Book entity, focusing only on essential fields.
  *
  */
+@Schema(description = "DTO representing a Book")
 public class BookDTO {
 
     private Long id;
     private String title;
     private Long authorId;
+    private String genre;
+    private Integer stockQuantity;
 
     /**
      * Default no-argument constructor for BookDTO.
@@ -31,6 +35,8 @@ public class BookDTO {
         this.id = book.getId();
         this.title = book.getTitle();
         this.authorId = book.getAuthor().getId();
+        this.genre = book.getGenre().toString();
+        this.stockQuantity = book.getStockUnits();
     }
 
     /**
@@ -113,6 +119,22 @@ public class BookDTO {
                 ", title='" + title + '\'' +
                 ", authorId='" + authorId + '\'' +
                 '}';
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public Integer getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(Integer stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
 
     @Override

@@ -20,6 +20,8 @@ public class DemoApplication {
     @Bean
     CommandLineRunner initDatabase(AuthorRepository authorRepository, BookRepository bookRepository) {
         return args -> {
+            authorRepository.deleteAll();
+            bookRepository.deleteAll();
             Author machado = new Author("Machado de Assis");
             Author markTwain = new Author("Mark Twain");
             authorRepository.save(machado);

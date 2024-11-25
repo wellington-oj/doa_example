@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,6 +42,28 @@ class BookstoreControllerTest {
     @Autowired
     private OrderService orderService;
 
+    @Test
+    void testFindAllBooks() throws EntityAlreadyExistsException, EntityNotFoundException {
+        Author author1 = new Author("Jane Austen");
+        authorService.saveAuthor(author1);
+
+        Author author2 = new Author("Charles Dickens");
+        authorService.saveAuthor(author2);
+
+        Book book1 = new Book("Pride and Prejudice", author1, Book.Genre.ROMANCE, 10);
+        Book book2 = new Book("Great Expectations", author2, Book.Genre.DRAMA, 8);
+
+        bookService.saveBook(book1);
+        bookService.saveBook(book2);
+
+        ResponseEntity<List<BookDTO>> response = bookstoreController.getAllBooks();
+
+        List<BookDTO> books = response.getBody();
+        assertNotNull(books);
+        assertEquals(3, books.size()); //there is a test book in the database
+        assertTrue(books.stream().anyMatch(b -> b.getTitle().equals("Pride and Prejudice")));
+        assertTrue(books.stream().anyMatch(b -> b.getTitle().equals("Great Expectations")));
+    }
 
     @Test
     void testSaveBook() throws EntityAlreadyExistsException, EntityNotFoundException {
