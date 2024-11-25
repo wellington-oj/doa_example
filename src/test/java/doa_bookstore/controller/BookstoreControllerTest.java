@@ -20,7 +20,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -58,7 +61,7 @@ class BookstoreControllerTest {
         authorService.saveAuthor(author);
         Book book = new Book("Pride and Prejudice", author, Book.Genre.ROMANCE, 10);
 
-        BookDTO savedBookDTO = bookstoreController.saveBook(book).getBody();
+        BookDTO savedBookDTO = bookstoreController.saveBook(new BookDTO(book)).getBody();
         assertNotNull(savedBookDTO);
         assertNotNull(savedBookDTO.getId());
         assertEquals("Pride and Prejudice", savedBookDTO.getTitle());
@@ -104,6 +107,7 @@ class BookstoreControllerTest {
         assertTrue(books.stream().anyMatch(b -> b.getTitle().equals("Emma")));
     }
 
+    @Transactional
     @Test
     void testMakeOrder() throws EntityAlreadyExistsException, InsufficientUnitsException, EntityNotFoundException {
         Author author = new Author("Jane Austen");
@@ -111,13 +115,16 @@ class BookstoreControllerTest {
 
         Book book = new Book("Pride and Prejudice", author, Book.Genre.ROMANCE, 10);
         bookService.saveBook(book);
+
         author.addBook(book);
         authorService.updateAuthor(author);
 
         HashMap<Book, Integer> orders = new HashMap<>();
         orders.put(book, 2);
 
-        OrdersDTO createdOrderDTO = bookstoreController.makeOrder("Alice", orders).getBody();
+        Orders order = new Orders("Alice",orders, LocalDateTime.now(), Orders.OrderStatus.PENDING);
+
+        OrdersDTO createdOrderDTO = bookstoreController.makeOrder(new OrdersDTO(order)).getBody();
         assertNotNull(createdOrderDTO);
         assertEquals("Alice", createdOrderDTO.getCustomerName());
         assertEquals(Orders.OrderStatus.PENDING, createdOrderDTO.getStatus());
@@ -137,16 +144,21 @@ class BookstoreControllerTest {
         HashMap<Book, Integer> orders = new HashMap<>();
         orders.put(book, 2);
 
-        assertThrows(InsufficientUnitsException.class, () -> bookstoreController.makeOrder("Alice", orders));
+        Orders order = new Orders("Alice",orders, LocalDateTime.now(), Orders.OrderStatus.PENDING);
+
+        assertThrows(InsufficientUnitsException.class, () -> bookstoreController.makeOrder(new OrdersDTO(order)));
     }
 
     @Test
     void testMakeOrderBookNotFound() {
         HashMap<Book, Integer> orders = new HashMap<>();
-        Book book = new Book("Nonexistent Book", null, Book.Genre.DRAMA, 5);
-        book.setId(1L);
+        Author author = new Author();
+        author.setId(1L);
+        Book book = new Book("Nonexistent Book", author, Book.Genre.DRAMA, 5);
+        book.setId(100L);
         orders.put(book, 2);
+        Orders order = new Orders("Alice",orders, LocalDateTime.now(), Orders.OrderStatus.PENDING);
 
-        assertThrows(EntityNotFoundException.class, () -> bookstoreController.makeOrder("Alice", orders));
+        assertThrows(EntityNotFoundException.class, () -> bookstoreController.makeOrder(new OrdersDTO(order)));
     }
 }

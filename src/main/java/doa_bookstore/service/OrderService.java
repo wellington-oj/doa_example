@@ -9,6 +9,8 @@ import doa_bookstore.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
@@ -34,7 +36,7 @@ public class OrderService {
      * @throws EntityAlreadyExistsException if an order with the same details already exists.
      */
     public Orders createOrder(String customerName, HashMap<Book, Integer> books) throws EntityAlreadyExistsException {
-        Orders order = new Orders(customerName, books, new Date(), OrderStatus.PENDING);
+        Orders order = new Orders(customerName, books, LocalDateTime.now(), OrderStatus.PENDING);
 
         // Optional: Prevent duplicates by checking for existing orders with the same customer and date
         Optional<Orders> existingOrder = orderRepository.findByCustomerNameAndOrderDate(customerName, order.getOrderDate());

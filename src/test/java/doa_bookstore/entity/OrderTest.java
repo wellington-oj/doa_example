@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -39,7 +41,7 @@ class OrderTest {
         book = new Book("1984", author, Book.Genre.SCIFI, 20);
         books = new HashMap<>();
         books.put(book, 3);
-        order = new Orders("Alice Johnson", books, new Date(), Orders.OrderStatus.PENDING);
+        order = new Orders("Alice Johnson", books, LocalDateTime.now(), Orders.OrderStatus.PENDING);
     }
 
     @Test
@@ -73,17 +75,9 @@ class OrderTest {
     }
 
     @Test
-    void testGetOrderDate() {
-        Date now = new Date();
-        order.setOrderDate(now);
-        assertEquals(now, order.getOrderDate());
-    }
-
-    @Test
     void testSetOrderDate() {
-        Date newDate = new Date();
-        order.setOrderDate(newDate);
-        assertEquals(newDate, order.getOrderDate());
+        order.setOrderDate(LocalDateTime.now());
+        assertEquals(LocalDateTime.now(), order.getOrderDate());
     }
 
     @Test

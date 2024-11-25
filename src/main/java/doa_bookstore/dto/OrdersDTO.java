@@ -4,6 +4,8 @@ import doa_bookstore.entity.Book;
 import doa_bookstore.entity.Orders;
 import doa_bookstore.entity.Orders.OrderStatus;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +21,7 @@ public class OrdersDTO {
     private Long id;
     private String customerName;
     private OrderStatus status;
-    private Date orderDate;
+    private LocalDateTime orderDate;
     private Map<BookDTO, Integer> books;
 
     /**
@@ -102,7 +104,7 @@ public class OrdersDTO {
      *
      * @return The order date.
      */
-    public Date getOrderDate() {
+    public LocalDateTime getOrderDate() {
         return orderDate;
     }
 
@@ -111,7 +113,7 @@ public class OrdersDTO {
      *
      * @param orderDate The new order date.
      */
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
 

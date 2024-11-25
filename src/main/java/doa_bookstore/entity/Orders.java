@@ -1,6 +1,9 @@
 package doa_bookstore.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,8 +28,8 @@ public class Orders {
     @Column(name = "quantity")
     private Map<Book, Integer> books = new HashMap<>();
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date orderDate;
+    @Column(name = "timestamp_field")
+    private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
@@ -53,7 +56,7 @@ public class Orders {
      * @param orderDate    The date the order was placed.
      * @param status       The status of the order.
      */
-    public Orders(String customerName, Map<Book, Integer> books, Date orderDate, OrderStatus status) {
+    public Orders(String customerName, Map<Book, Integer> books, LocalDateTime orderDate, OrderStatus status) {
         this.customerName = customerName;
         this.books = books;
         this.orderDate = orderDate;
@@ -84,11 +87,11 @@ public class Orders {
         this.books = books;
     }
 
-    public Date getOrderDate() {
+    public LocalDateTime getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
 
