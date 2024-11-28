@@ -3,14 +3,11 @@ package doa_bookstore.service;
 import doa_bookstore.entity.Book;
 import doa_bookstore.entity.Orders;
 import doa_bookstore.exception.EntityAlreadyExistsException;
-import doa_bookstore.service.OrderService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.HashMap;
 import java.util.Optional;

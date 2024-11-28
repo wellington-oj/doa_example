@@ -12,17 +12,12 @@ import doa_bookstore.exception.InsufficientUnitsException;
 import doa_bookstore.service.AuthorService;
 import doa_bookstore.service.BookService;
 import doa_bookstore.service.OrderService;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
